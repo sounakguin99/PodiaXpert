@@ -1,7 +1,6 @@
 "use client";
 
-import { useRef } from 'react';
-import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Star } from 'lucide-react';
 import Image from 'next/image';
 
 const reviews = [
@@ -34,29 +33,18 @@ const reviews = [
     text: "Highly professional and skilled podiatrists. I got my bunion surgery done here, and the recovery was much faster than I expected.",
     rating: 5,
     image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=150"
+  },
+  {
+    name: "Anjali B.",
+    text: "The clinic is spotless and uses the latest technology. My sports injury healed beautifully thanks to their targeted physical therapy.",
+    rating: 5,
+    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150"
   }
 ];
 
 export default function Testimonials() {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-
-  const scroll = (direction: 'left' | 'right') => {
-    if (scrollContainerRef.current) {
-      const container = scrollContainerRef.current;
-      const cardWidth = (container.firstElementChild as HTMLElement)?.offsetWidth || 0;
-      const gap = 24; // gap-6 is 24px
-      const scrollAmount = cardWidth + gap;
-      
-      if (direction === 'left') {
-        container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-      } else {
-        container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-      }
-    }
-  };
-
   return (
-    <section id="testimonials" className="py-20 bg-white overflow-hidden">
+    <section id="testimonials" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <p className="text-red-600 font-semibold text-sm tracking-wider uppercase mb-3">
@@ -67,62 +55,43 @@ export default function Testimonials() {
           </h2>
         </div>
 
-        <div className="relative group">
-          {/* Left Arrow */}
-          <button 
-            onClick={() => scroll('left')}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 lg:-translate-x-6 bg-white p-3 rounded-full shadow-lg border border-gray-100 text-gray-600 hover:text-emerald-600 z-10 transition-colors"
-            aria-label="Previous testimonials"
-          >
-            <ChevronLeft className="w-6 h-6" />
-          </button>
-
-          {/* Slider Container */}
-          <div 
-            ref={scrollContainerRef}
-            className="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-8 pt-4 px-4 -mx-4 [&::-webkit-scrollbar]:hidden"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-          >
-            {reviews.map((review, index) => (
-              <div 
-                key={index} 
-                className="min-w-full md:min-w-[calc(33.333%-16px)] snap-start flex-shrink-0 bg-slate-50 rounded-2xl p-6 lg:p-8 border border-slate-100 shadow-sm flex flex-col hover:shadow-md transition-shadow"
-              >
-                <div className="flex gap-1 mb-6">
-                  {[...Array(review.rating)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                  ))}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {reviews.map((review, index) => (
+            <div 
+              key={index} 
+              className="bg-slate-50 rounded-2xl p-6 lg:p-8 border border-slate-100 shadow-sm flex flex-col hover:shadow-md transition-shadow"
+            >
+              <div className="flex gap-1 mb-6">
+                {[...Array(review.rating)].map((_, i) => (
+                  <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                ))}
+              </div>
+              <p className="text-gray-600 mb-8 italic leading-relaxed flex-grow">
+                "{review.text}"
+              </p>
+              <div className="flex items-center gap-4 mt-auto">
+                <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-emerald-100 shadow-sm">
+                  <Image 
+                    src={review.image} 
+                    alt={review.name}
+                    fill
+                    className="object-cover"
+                  />
                 </div>
-                <p className="text-gray-600 mb-8 italic leading-relaxed flex-grow">
-                  "{review.text}"
-                </p>
-                <div className="flex items-center gap-4 mt-auto">
-                  <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-emerald-100 shadow-sm">
-                    <Image 
-                      src={review.image} 
-                      alt={review.name}
-                      fill
-                      className="object-cover"
-                    />
+                <div>
+                  <div className="font-bold text-gray-900 text-sm">
+                    {review.name}
                   </div>
-                  <div>
-                    <div className="font-bold text-gray-900 text-sm">
-                      {review.name}
-                    </div>
-                    <div className="text-xs text-gray-500 font-medium">Patient</div>
-                  </div>
+                  <div className="text-xs text-gray-500 font-medium">Patient</div>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
+        </div>
 
-          {/* Right Arrow */}
-          <button 
-            onClick={() => scroll('right')}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 lg:translate-x-6 bg-white p-3 rounded-full shadow-lg border border-gray-100 text-gray-600 hover:text-emerald-600 z-10 transition-colors"
-            aria-label="Next testimonials"
-          >
-            <ChevronRight className="w-6 h-6" />
+        <div className="mt-12 text-center">
+          <button className="bg-white text-red-600 border-2 border-red-100 px-8 py-3 rounded-lg font-bold hover:bg-red-50 hover:border-red-200 transition shadow-sm">
+            View All Reviews
           </button>
         </div>
       </div>
