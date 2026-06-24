@@ -13,13 +13,19 @@ export default function OurStory() {
               Our Story
             </p>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-              Why We Started PodiaXpert
+              Who We Are
             </h2>
             <p className="text-gray-600 mb-6 leading-relaxed">
-              PodiaXpert was founded with a single mission: to bring advanced, specialized podiatry care to Kolkata. We recognized a significant gap in dedicated foot and ankle treatments, leaving many patients suffering from chronic pain without proper diagnosis or modern interventions.
+              At PodiaXpert, we believe that healthy feet are the foundation of an active and fulfilling life. As a specialised foot clinic in Kolkata, our mission is to provide personalised, evidence-based foot care solutions that help people move comfortably and confidently.
             </p>
             <p className="text-gray-600 mb-10 leading-relaxed">
-              Today, we combine international expertise with state-of-the-art technology like 3D scanning, custom orthotics, and advanced laser therapies to deliver treatments that are effective, personalized, and minimally invasive.
+              We offer comprehensive assessment and treatment for a wide range of foot and ankle conditions, including heel pain, plantar fasciitis, flat feet, diabetic foot problems, corns and calluses, ankle pain, Achilles tendinitis and other mobility-related concerns. Our services also include advanced foot assessment, computerised gait analysis, custom insoles, orthotics and customised footwear solutions.
+            </p>
+            <p className="text-gray-600 mb-10 leading-relaxed">
+              At the heart of PodiaXpert is a patient-first approach. We understand that every individual is different, which is why we focus on identifying the root cause of your discomfort and creating treatment plans tailored to your specific needs and lifestyle.
+            </p>
+            <p className="text-gray-600 mb-10 leading-relaxed">
+              Whether you are a working professional dealing with long hours on your feet, an athlete looking to improve performance, a senior citizen seeking better mobility, or someone living with diabetes, our team is committed to helping you achieve better foot health and improved quality of life.
             </p>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">

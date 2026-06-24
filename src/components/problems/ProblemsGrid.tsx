@@ -1,70 +1,45 @@
 import Link from 'next/link';
 import { Activity, ChevronRight } from 'lucide-react';
 
-const problems = [
-  {
-    title: 'Heel Pain',
-    description: 'Click to read detailed information regarding causes, symptoms, and the...',
-    theme: 'red'
-  },
-  {
-    title: 'Plantar Fasciitis',
-    description: 'Click to read detailed information regarding causes, symptoms, and the...',
-    theme: 'red'
-  },
-  {
-    title: 'Flat Feet',
-    description: 'Click to read detailed information regarding causes, symptoms, and the...',
-    theme: 'green'
-  },
-  {
-    title: 'Corns & Calluses',
-    description: 'Click to read detailed information regarding causes, symptoms, and the...',
-    theme: 'red'
-  },
-  {
-    title: 'Diabetic Foot',
-    description: 'Click to read detailed information regarding causes, symptoms, and the...',
-    theme: 'red'
-  }
-];
+import { problemsData } from '../../data/problems';
+
+// We map colors to problems dynamically to maintain the aesthetic
+const themeColors = ['red', 'green', 'blue', 'amber', 'purple'];
+
 
 export default function ProblemsGrid() {
   return (
     <section className="py-20 bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
-          {problems.map((problem, index) => (
+          {problemsData.map((problem, index) => {
+            const theme = themeColors[index % themeColors.length];
+            return (
             <div 
-              key={index} 
-              className={`bg-white rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition duration-300 flex flex-col h-full ${
-                problem.theme === 'green' 
-                  ? 'border border-emerald-400 shadow-[0_8px_30px_rgba(52,211,153,0.12)]' 
-                  : 'border border-gray-100 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)]'
-              }`}
+              key={problem.slug} 
+              className={`bg-white rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition duration-300 flex flex-col h-full border border-gray-100 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] group`}
             >
-              <div className="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center mb-6">
+              <div className="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-red-100 transition-colors">
                 <Activity className="w-6 h-6 text-red-600" />
               </div>
               
               <h3 className="text-2xl font-bold text-gray-900 mb-4">{problem.title}</h3>
-              <p className="text-gray-500 mb-8 leading-relaxed text-sm">
+              <p className="text-gray-500 mb-8 leading-relaxed text-sm line-clamp-3">
                 {problem.description}
               </p>
 
               <div className="mt-auto">
                 <Link 
-                  href={`/problems`} 
-                  className={`inline-flex items-center font-bold transition group ${
-                    problem.theme === 'green' ? 'text-emerald-500 hover:text-emerald-600' : 'text-red-600 hover:text-red-700'
-                  }`}
+                  href={`/problems/${problem.slug}`} 
+                  className="inline-flex items-center font-bold text-red-600 hover:text-red-700 transition"
                 >
                   <span className="mr-1">Read Details</span>
                   <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* CTA Section */}

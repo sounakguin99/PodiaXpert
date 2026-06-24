@@ -61,6 +61,10 @@ export default function BookingContent() {
                   <MessageCircle className="w-5 h-5" /> Book via WhatsApp
                 </button>
               </div>
+              <div className="mt-6 pt-6 border-t border-gray-800 space-y-4 text-gray-300">
+                <p>📞 Call/WhatsApp Us: <strong>9230374058</strong></p>
+                <p>📍 Visit Our Clinic: <a href="https://maps.app.goo.gl/xEy1oS8NLQtpPJ5w6" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:underline">Google Maps</a></p>
+              </div>
             </div>
 
           </div>
@@ -118,8 +122,15 @@ export default function BookingContent() {
                       <option value="">-- Choose an option --</option>
                       <option value="heel-pain">Heel Pain</option>
                       <option value="plantar-fasciitis">Plantar Fasciitis</option>
-                      <option value="flat-foot">Flat Foot</option>
-                      <option value="diabetic-foot">Diabetic Foot</option>
+                      <option value="flat-feet">Flat Feet</option>
+                      <option value="diabetic-foot">Diabetic Foot Problems</option>
+                      <option value="corns-calluses">Corns & Calluses</option>
+                      <option value="ankle-pain">Ankle Pain</option>
+                      <option value="achilles-tendinitis">Achilles Tendinitis</option>
+                      <option value="metatarsalgia">Metatarsalgia</option>
+                      <option value="custom-insoles">Custom Insoles</option>
+                      <option value="custom-footwear">Custom Footwear</option>
+                      <option value="general-foot-assessment">General Foot Assessment</option>
                       <option value="other">Other</option>
                     </select>
                   </div>
