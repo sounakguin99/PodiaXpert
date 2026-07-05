@@ -1,6 +1,6 @@
 export default function ServicesHero() {
   return (
-    <section className="bg-slate-50 pt-24 pb-12">
+    <section className="bg-white pt-24 pb-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 tracking-tight">
           Our Services

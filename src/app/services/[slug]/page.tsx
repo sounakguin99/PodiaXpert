@@ -194,18 +194,18 @@ export default async function ServiceDetail({ params }: ServicePageProps) {
         </div>
         
         {/* CTA Section */}
-        <div className="w-4xl mx-auto bg-gradient-to-br from-blue-900 to-indigo-900 rounded-3xl p-10 sm:p-12 text-center text-white shadow-xl mb-12">
+        <div className="w-4xl mx-auto bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl p-10 sm:p-12 text-center text-white shadow-xl mb-12">
           <h2 className="text-3xl font-bold mb-4">
             Interested in {service.title}?
           </h2>
-          <p className="text-blue-100 mb-8 max-w-2xl mx-auto text-lg leading-relaxed">
+          <p className="text-gray-300 mb-8 max-w-2xl mx-auto text-lg leading-relaxed">
             Our experts are ready to provide top-notch care and personalized solutions for you.
           </p>
           <Link 
             href="/book-appointment" 
-            className="inline-block bg-white text-blue-900 font-bold px-8 py-4 rounded-xl hover:bg-gray-50 hover:scale-105 transition duration-300 shadow-lg"
+            className="inline-block bg-white text-gray-900 font-bold px-8 py-4 rounded-xl hover:bg-gray-50 hover:scale-105 transition duration-300 shadow-lg"
           >
-            Book An Appointment
+            Book Your Free Consultation
           </Link>
         </div>
       </div>
