@@ -5,7 +5,7 @@ import { MapPin, Phone, Mail, Clock } from "lucide-react";
 export default function Footer() {
   return (
     <footer className="bg-[#111827] text-white pt-16 pb-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
           {/* Brand Info */}
           <div>
@@ -13,7 +13,7 @@ export default function Footer() {
               <Image
                 src="/Logo/logoblack.png"
                 alt="PodiaXpert Logo"
-                width={110}
+                width={120}
                 height={40}
                 className="object-contain"
               />
@@ -25,7 +25,7 @@ export default function Footer() {
             </p>
             <div className="flex gap-4">
               <Link
-                href="https://facebook.com"
+                href="https://www.facebook.com/podiaxpert"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-emerald-600 transition group"
@@ -43,7 +43,7 @@ export default function Footer() {
                 </svg>
               </Link>
               <Link
-                href="https://instagram.com"
+                href="https://www.instagram.com/podia.xpert/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-emerald-600 transition group"
@@ -63,7 +63,7 @@ export default function Footer() {
                 </svg>
               </Link>
               <Link
-                href="https://twitter.com"
+                href="https://www.youtube.com/channel/UCRSnVPj7uLjOOXho21w1eJQ"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-emerald-600 transition group"
@@ -77,27 +77,8 @@ export default function Footer() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
-                  <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
-                </svg>
-              </Link>
-              <Link
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-emerald-600 transition group"
-              >
-                <svg
-                  className="w-5 h-5 text-emerald-500 group-hover:text-white transition"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                  <rect x="2" y="9" width="4" height="12"></rect>
-                  <circle cx="4" cy="4" r="2"></circle>
+                  <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path>
+                  <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
                 </svg>
               </Link>
             </div>
@@ -141,7 +122,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/contact"
+                  href="/contact-us"
                   className="text-gray-400 hover:text-white transition text-sm"
                 >
                   Contact Us
@@ -156,7 +137,7 @@ export default function Footer() {
             <ul className="space-y-4">
               <li>
                 <Link
-                  href="/problems"
+                  href="/problems/heel-pain"
                   className="text-gray-400 hover:text-white transition text-sm"
                 >
                   Heel Pain
@@ -164,7 +145,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/problems"
+                  href="/problems/plantar-fasciitis"
                   className="text-gray-400 hover:text-white transition text-sm"
                 >
                   Plantar Fasciitis
@@ -172,7 +153,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/problems"
+                  href="/services/diabetic-foot-care"
                   className="text-gray-400 hover:text-white transition text-sm"
                 >
                   Diabetic Foot
@@ -180,7 +161,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/custom-insoles"
+                  href="/services/custom-insoles"
                   className="text-gray-400 hover:text-white transition text-sm"
                 >
                   Custom Insoles
@@ -188,7 +169,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/custom-footwear"
+                  href="/services/custom-footwear"
                   className="text-gray-400 hover:text-white transition text-sm"
                 >
                   Custom Footwear
@@ -204,17 +185,20 @@ export default function Footer() {
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-emerald-500 flex-shrink-0" />
                 <span className="text-gray-400 text-sm">
-                  123 Health Avenue, Salt Lake City, Kolkata, WB 700091
+                  Block BA47, 1929, Rajdanga Main Road, Sarat Park, Naskarhat, East Kolkata Twp, Kolkata, West Bengal 700107
                 </span>
               </li>
-              <li className="flex items-center gap-3">
-                <Phone className="w-5 h-5 text-emerald-500 flex-shrink-0" />
-                <span className="text-gray-400 text-sm">+91 98765 43210</span>
+              <li className="flex items-start gap-3">
+                <Phone className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+                <div>
+                  <span className="text-gray-400 text-sm block">+91 92303 74058</span>
+                  <span className="text-gray-500 text-xs block mt-0.5">Available for emergency calls.</span>
+                </div>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-emerald-500 flex-shrink-0" />
                 <span className="text-gray-400 text-sm">
-                  hello@podiaxpert.com
+                  support@podiaxpert.com
                 </span>
               </li>
               <li className="flex items-start gap-3">

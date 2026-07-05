@@ -6,7 +6,8 @@ export default function ProblemsHero() {
           Foot Problems We Treat
         </h1>
         <p className="text-lg md:text-xl text-gray-600 font-medium max-w-2xl mx-auto leading-relaxed">
-          Learn more about common foot conditions, their causes, and how PodiaXpert can help you recover.
+          Read More about common foot conditions, their causes, and how
+          PodiaXpert can help you recover.
         </p>
       </div>
     </section>

@@ -4,9 +4,21 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Menu, X } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+
+const navItems = [
+  { name: 'Home', path: '/' },
+  { name: 'About', path: '/about' },
+  { name: 'Services', path: '/services' },
+  { name: 'Doctors', path: '/doctors' },
+  { name: 'Problems', path: '/problems' },
+  { name: 'Blogs', path: '/blogs' },
+  { name: 'Contact', path: '/contact-us' },
+];
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -14,7 +26,7 @@ export default function Navbar() {
 
   return (
     <nav className="w-full bg-white shadow-sm sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-12">
         <div className="flex justify-between h-20 items-center">
           {/* Logo */}
           <div className="flex-shrink-0 flex items-center">
@@ -32,33 +44,21 @@ export default function Navbar() {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex space-x-8 items-center">
-            <Link href="/" className="text-red-600 font-medium text-sm hover:text-red-700 transition">
-              Home
-            </Link>
-            <Link href="/about" className="text-gray-600 font-medium text-sm hover:text-red-600 transition">
-              About
-            </Link>
-            <Link href="/services" className="text-gray-600 font-medium text-sm hover:text-red-600 transition">
-              Services
-            </Link>
-            <Link href="/doctors" className="text-gray-600 font-medium text-sm hover:text-red-600 transition">
-              Doctors
-            </Link>
-            <Link href="/problems" className="text-gray-600 font-medium text-sm hover:text-red-600 transition">
-              Problems
-            </Link>
-            <Link href="/blogs" className="text-gray-600 font-medium text-sm hover:text-red-600 transition">
-              Blogs
-            </Link>
-            <Link href="/contact" className="text-gray-600 font-medium text-sm hover:text-red-600 transition">
-              Contact
-            </Link>
+            {navItems.map((item) => (
+              <Link 
+                key={item.name}
+                href={item.path} 
+                className={`${pathname === item.path ? 'text-red-600' : 'text-gray-600'} font-medium text-sm hover:text-red-600 transition`}
+              >
+                {item.name}
+              </Link>
+            ))}
           </div>
 
           {/* CTA Button (Desktop) */}
           <div className="hidden md:flex items-center">
             <Link 
-              href="/book" 
+              href="/book-appointment" 
               className="bg-red-600 text-white px-6 py-2.5 rounded-md font-medium text-sm hover:bg-red-700 transition shadow-sm"
             >
               Book Free Consultation
@@ -81,57 +81,18 @@ export default function Navbar() {
       {isOpen && (
         <div className="md:hidden bg-white border-t border-gray-100 shadow-lg absolute w-full left-0">
           <div className="px-4 pt-2 pb-6 space-y-1 flex flex-col">
+            {navItems.map((item) => (
+              <Link 
+                key={item.name}
+                href={item.path} 
+                onClick={() => setIsOpen(false)}
+                className={`block px-3 py-3 text-base font-medium rounded-md ${pathname === item.path ? 'text-red-600 bg-red-50' : 'text-gray-700 hover:text-red-600 hover:bg-red-50'}`}
+              >
+                {item.name}
+              </Link>
+            ))}
             <Link 
-              href="/" 
-              onClick={() => setIsOpen(false)}
-              className="block px-3 py-3 text-base font-medium text-red-600 hover:bg-red-50 rounded-md"
-            >
-              Home
-            </Link>
-            <Link 
-              href="/about" 
-              onClick={() => setIsOpen(false)}
-              className="block px-3 py-3 text-base font-medium text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-md"
-            >
-              About
-            </Link>
-            <Link 
-              href="/services" 
-              onClick={() => setIsOpen(false)}
-              className="block px-3 py-3 text-base font-medium text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-md"
-            >
-              Services
-            </Link>
-            <Link 
-              href="/doctors" 
-              onClick={() => setIsOpen(false)}
-              className="block px-3 py-3 text-base font-medium text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-md"
-            >
-              Doctors
-            </Link>
-            <Link 
-              href="/problems" 
-              onClick={() => setIsOpen(false)}
-              className="block px-3 py-3 text-base font-medium text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-md"
-            >
-              Problems
-            </Link>
-            <Link 
-              href="/blogs" 
-              onClick={() => setIsOpen(false)}
-              className="block px-3 py-3 text-base font-medium text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-md"
-            >
-              Blogs
-            </Link>
-            <Link 
-              href="/contact" 
-              onClick={() => setIsOpen(false)}
-              className="block px-3 py-3 text-base font-medium text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-md"
-            >
-              Contact
-            </Link>
-            <Link 
-              href="/book" 
+              href="/book-appointment" 
               onClick={() => setIsOpen(false)}
               className="mt-4 block w-full text-center bg-red-600 text-white px-6 py-3 rounded-md font-medium hover:bg-red-700 transition"
             >

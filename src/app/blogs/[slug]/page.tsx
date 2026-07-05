@@ -1,9 +1,37 @@
-import Navbar from '@/components/global/Navbar';
-import Footer from '@/components/global/Footer';
+import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { blogPosts } from '@/lib/blogData';
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const post = blogPosts.find((p) => p.slug === slug);
+  if (!post) return {};
+
+  return {
+    title: post.title,
+    description: post.excerpt,
+    keywords: [
+      post.category.toLowerCase(),
+      "foot care",
+      "podiatry Kolkata",
+      "PodiaXpert blog",
+    ],
+    alternates: {
+      canonical: `https://www.podiaxpert.com/blogs/${slug}`,
+    },
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      url: `https://www.podiaxpert.com/blogs/${slug}`,
+      type: "article",
+      images: [{ url: post.image, alt: post.title }],
+      publishedTime: post.date,
+      authors: [post.author],
+    },
+  };
+}
 
 // Generate static params for all blog posts
 export async function generateStaticParams() {
@@ -22,8 +50,6 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   return (
     <main className="min-h-screen flex flex-col font-sans">
-      <Navbar />
-      
       <article className="flex-grow bg-white pt-20 pb-24">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           
@@ -90,7 +116,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             <div className="bg-slate-50 rounded-2xl p-8 text-center border border-gray-100">
               <h3 className="text-2xl font-bold text-gray-900 mb-3">Need personalized care?</h3>
               <p className="text-gray-600 mb-6 max-w-md mx-auto">Our experts are here to help you get back on your feet. Schedule a consultation today.</p>
-              <Link href="/book" className="inline-block bg-red-600 text-white font-bold px-8 py-3 rounded-xl hover:bg-red-700 transition shadow-md">
+              <Link href="/book-appointment" className="inline-block bg-red-600 text-white font-bold px-8 py-3 rounded-xl hover:bg-red-700 transition shadow-md">
                 Book an Appointment
               </Link>
             </div>
@@ -98,8 +124,6 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         </div>
 
       </article>
-
-      <Footer />
     </main>
   );
 }

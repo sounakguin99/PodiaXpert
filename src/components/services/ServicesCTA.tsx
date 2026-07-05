@@ -12,7 +12,7 @@ export default function ServicesCTA() {
             Schedule your consultation today and discover the right treatment for your feet.
           </p>
           <Link 
-            href="/book" 
+            href="/book-appointment" 
             className="inline-block bg-red-600 text-white font-bold px-8 py-4 rounded-lg hover:bg-red-700 transition shadow-lg"
           >
             Book Appointment

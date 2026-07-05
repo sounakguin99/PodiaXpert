@@ -1,104 +1,115 @@
-"use client";
+import Link from "next/link";
+import { ChevronRight } from "lucide-react";
+import { problemsData } from "../../data/problems";
 
-import { useState } from 'react';
-import Image from 'next/image';
-import { ArrowRight } from 'lucide-react';
+// Map each problem slug to its primary card image
+const cardImages: Record<string, string> = {
+  "achilles-tendinitis": "/Achilles Tendinitis/Achilles Tendinitis 1.jpg",
+  "ankle-pain": "/Ankle Pain/Ankle Pain 1.jpg",
+  bunions: "/Bunions/Bunions 1.jpg",
+  "calcaneal-spur-or-heel-spur": "/Calcaneal Spur/Heel spur.jpg",
+  "corns-and-calluses": "/Foot Assessment/foot scan.jpg",
+  "diabetic-neuropathy": "/Diabetic Neuropathy/Diabetic Neuropathy 2.jpg",
+  "flat-feet": "/Flat Feet/Flat feet.jpg",
+  "heel-pain": "/Heel pain/Heel pain.jpg",
+  "ingrown-toenail": "/Ingrown Toenail/ingrown toenail.jpg",
+  metatarsalgia: "/Metatarsalgia/Metatarsalgia.jpg",
+  "plantar-fasciitis": "/Plantar Fasciitis/plantar-fasciitis.jpg",
+};
 
-const problemsData = [
-  {
-    title: "HEEL PAIN",
-    desc: "Heel pain is a common condition often caused by plantar fasciitis or Achilles tendonitis. We offer advanced diagnostic and treatment options.",
-    image: "https://images.unsplash.com/photo-1581594693702-fbdc51b2763b?auto=format&fit=crop&q=80&w=800"
-  },
-  {
-    title: "PLANTAR FASCIITIS",
-    desc: "Inflammation of the thick band of tissue that runs across the bottom of your foot. Our custom orthotics and physical therapy can provide lasting relief.",
-    image: "https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?auto=format&fit=crop&q=80&w=800"
-  },
-  {
-    title: "FLAT FOOT",
-    desc: "A condition where the arches on the inside of your feet are flattened. We provide specialized footwear and custom insoles to improve foot biomechanics.",
-    image: "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&q=80&w=800"
-  },
-  {
-    title: "CORNS & CALLUSES",
-    desc: "Thick, hardened layers of skin that develop when your skin tries to protect itself against friction and pressure. We safely remove them and address the root cause.",
-    image: "https://images.unsplash.com/photo-1544117519-31a4b719223d?auto=format&fit=crop&q=80&w=800"
-  },
-  {
-    title: "DIABETIC FOOT",
-    desc: "Comprehensive diabetic foot care to prevent complications. We offer regular screening, nail care, and specialized offloading footwear.",
-    image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=800"
-  },
-  {
-    title: "BUNIONS",
-    desc: "A bony bump that forms on the joint at the base of your big toe. From conservative management to surgical options, we help you walk pain-free.",
-    image: "https://images.unsplash.com/photo-1536063211352-0b94219f6212?auto=format&fit=crop&q=80&w=800"
-  },
-  {
-    title: "SPORTS INJURIES",
-    desc: "Whether you're a professional athlete or a weekend warrior, we treat ankle sprains, stress fractures, and tendon issues to get you back in the game.",
-    image: "https://images.unsplash.com/photo-1571008887538-b36bb32f4571?auto=format&fit=crop&q=80&w=800"
-  }
-];
+// Expanded descriptions to fill out cards professionally
+const expandedDescriptions: Record<string, string> = {
+  "achilles-tendinitis":
+    "Experiencing pain or stiffness at the back of your heel? Learn about the causes of Achilles Tendinitis, its common symptoms like swelling or morning stiffness, and how customized orthotics and therapy can help you recover.",
+  "ankle-pain":
+    "Ankle pain can arise from sprains, injuries, or chronic instability. Read about the symptoms of ankle pain, its underlying causes, and our specialized gait analysis and support solutions designed to get you back on your feet.",
+  bunions:
+    "A painful, bony bump at the base of your big toe can cause significant discomfort. Read about how bunions develop, how they affect foot alignment, and discover our custom footwear and orthotic solutions to relieve pressure.",
+  "calcaneal-spur-or-heel-spur":
+    "Sharp heel pain can make your first steps in the morning painful. Learn about calcaneal (heel) spurs, how they are diagnosed using computerized gait analysis, and how customized insoles provide long-term relief.",
+  "corns-and-calluses":
+    "Hardened layers of skin caused by friction and pressure can make walking painful. Understand why corns and calluses develop, and explore our professional care and custom pressure-relieving insoles.",
+  "diabetic-neuropathy":
+    "Nerve damage from diabetes can lead to numbness, tingling, or pain in your feet. Discover the signs of diabetic neuropathy, the importance of regular screening, and our specialized footcare solutions.",
+  "flat-feet":
+    "Low or fallen arches can lead to pain in your feet, ankles, knees, and back. Learn how flat feet affect your alignment and how our custom-designed orthotics can restore balance and walking comfort.",
+  "heel-pain":
+    "Heel pain is a very common condition that affects daily activities. Discover the multiple causes of heel pain, when to seek professional help, and how customized insoles and proper footwear bring long-term relief.",
+  "ingrown-toenail":
+    "Pain, redness, and swelling around your toenail can indicate an ingrown toenail. Learn about the causes of this painful condition, preventive care tips, and professional treatment options for lasting relief.",
+  metatarsalgia:
+    "Pain and inflammation in the ball of your foot can restrict your mobility. Understand the symptoms of metatarsalgia, its common causes like improper footwear, and how custom cushioning orthotics can help.",
+  "plantar-fasciitis":
+    "A sharp stabbing pain in your heel, especially during your first steps in the morning, is a classic sign of plantar fasciitis. Learn how it develops and how custom orthotics can relieve strain and pain.",
+};
 
 export default function Problems() {
-  const [activeTab, setActiveTab] = useState(0);
-
   return (
     <section className="py-20 bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <p className="text-red-600 font-semibold text-sm tracking-wider uppercase mb-3">
+        <span className="text-red-600 font-bold text-sm tracking-wider uppercase mb-3 block">
           What Are You Suffering From?
-        </p>
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-12">
+        </span>
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
           Common Foot Problems We Treat
         </h2>
+        <p className="text-gray-600 text-lg mb-12 max-w-2xl mx-auto">
+          If you're experiencing any of the following issues, our team can help:
+        </p>
 
-        {/* Tabs */}
-        <div className="flex flex-wrap justify-center gap-4 max-w-4xl mx-auto mb-16">
-          {problemsData.map((problem, index) => (
-            <button 
-              key={index} 
-              onClick={() => setActiveTab(index)}
-              className={`font-semibold text-sm px-6 py-3 rounded-full shadow-sm border transition-all duration-300 ${
-                activeTab === index 
-                  ? 'bg-emerald-600 text-white border-emerald-600 shadow-md scale-105' 
-                  : 'bg-white text-gray-800 border-slate-200 hover:border-emerald-500 hover:text-emerald-600'
-              }`}
-            >
-              {problem.title}
-            </button>
-          ))}
+        {/* 6 Problems Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12 text-left">
+          {problemsData.slice(0, 6).map((problem) => {
+            const imageUrl =
+              cardImages[problem.slug] || "/Foot Assessment/foot scan.jpg";
+            const description =
+              expandedDescriptions[problem.slug] || problem.description;
+            return (
+              <div
+                key={problem.slug}
+                className="bg-white rounded-3xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition duration-300 flex flex-col h-full border border-gray-100 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] group"
+              >
+                {/* Card Image */}
+                <div className="relative w-full aspect-[16/10] overflow-hidden bg-slate-100 border-b border-gray-100">
+                  <img
+                    src={imageUrl}
+                    alt={problem.title}
+                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+
+                <div className="p-8 flex flex-col flex-grow">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                    {problem.title}
+                  </h3>
+                  <p className="text-gray-500 mb-8 leading-relaxed text-sm line-clamp-4">
+                    {description}
+                  </p>
+
+                  <div className="mt-auto">
+                    <Link
+                      href={`/problems/${problem.slug}`}
+                      className="inline-flex items-center font-bold text-red-600 hover:text-red-700 transition"
+                    >
+                      <span className="mr-1">Read More</span>
+                      <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
-        {/* Active Content Display */}
-        <div className="max-w-5xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 flex flex-col md:flex-row text-left transition-all duration-500">
-          <div className="md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
-            <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-              {problemsData[activeTab].title}
-            </h3>
-            <div className="w-16 h-1 bg-red-600 mb-6 rounded-full"></div>
-            <p className="text-gray-600 text-lg mb-8 leading-relaxed">
-              {problemsData[activeTab].desc}
-            </p>
-            <button className="inline-flex items-center text-emerald-600 font-bold hover:text-emerald-700 transition w-fit group">
-              Learn more about this treatment 
-              <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-            </button>
-          </div>
-          
-          <div className="md:w-1/2 relative min-h-[300px] md:min-h-[400px]">
-            <Image 
-              key={activeTab} // Forces image to re-render with animation if needed
-              src={problemsData[activeTab].image}
-              alt={problemsData[activeTab].title}
-              fill
-              className="object-cover animate-in fade-in duration-500"
-            />
-          </div>
+        {/* Explore More Button */}
+        <div className="text-center">
+          <Link
+            href="/problems"
+            className="inline-block bg-red-600 text-white font-bold px-8 py-4 rounded-xl hover:bg-red-700 transition shadow-lg"
+          >
+            Explore More
+          </Link>
         </div>
-
       </div>
     </section>
   );

@@ -1,14 +1,28 @@
-import Navbar from '@/components/global/Navbar';
-import Footer from '@/components/global/Footer';
+import type { Metadata } from "next";
 import Link from 'next/link';
 import Image from 'next/image';
 import { blogPosts } from '@/lib/blogData';
 
+export const metadata: Metadata = {
+  title: "Foot Care Blog – Tips, Insights & Podiatry News",
+  description:
+    "Read the latest foot care tips, podiatry insights, and expert articles from PodiaXpert. Learn about heel pain, plantar fasciitis, diabetic foot care, custom orthotics and more.",
+  keywords: [
+    "foot care blog",
+    "podiatry tips",
+    "heel pain articles",
+    "plantar fasciitis guide",
+    "diabetic foot care tips",
+    "foot health Kolkata",
+    "orthotics guide",
+  ],
+  alternates: {
+    canonical: "https://www.podiaxpert.com/blogs",
+  },
+};
 export default function BlogsPage() {
   return (
     <main className="min-h-screen flex flex-col font-sans">
-      <Navbar />
-      
       <section className="bg-white pt-24 pb-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 tracking-tight">
@@ -62,8 +76,6 @@ export default function BlogsPage() {
 
         </div>
       </div>
-
-      <Footer />
     </main>
   );
 }

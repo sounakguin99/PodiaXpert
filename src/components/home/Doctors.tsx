@@ -8,7 +8,7 @@ const doctors = [
     qualifications: 'DPM, MS (Orthopedics)',
     role: 'Chief Podiatrist',
     experience: '15+ Years',
-    expertise: ['Plantar Fasciitis', 'Sports Injuries', 'Surgical Podiatry'],
+    details: 'Dr. Sharma is a senior podiatric surgeon specialising in complex foot reconstructions, sports-related injuries, and advanced surgical interventions. He leads the clinical team at PodiaXpert.',
     image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=600'
   },
   {
@@ -16,7 +16,7 @@ const doctors = [
     qualifications: 'DPM, Diabetic Foot Expert',
     role: 'Diabetic Foot Specialist',
     experience: '10+ Years',
-    expertise: ['Diabetic Foot Care', 'Wound Healing', 'Neuropathy'],
+    details: 'Dr. Roy specialises in diabetic wound care, peripheral neuropathy management, and complication prevention. She works closely with patients to design effective pressure-offloading solutions.',
     image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=600'
   },
   {
@@ -24,7 +24,7 @@ const doctors = [
     qualifications: 'BPT, Sports Rehab',
     role: 'Orthotics Expert',
     experience: '8+ Years',
-    expertise: ['Custom Insoles', 'Flat Feet', 'Gait Analysis'],
+    details: 'Dr. Das is an expert in biomechanics, computerized gait analysis, and custom orthotics fabrication. He focuses on correcting postural imbalances, flat feet, and sports-related foot strain.',
     image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=600'
   }
 ];
@@ -35,21 +35,17 @@ export default function Doctors({ hideHeader = false }: { hideHeader?: boolean }
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {!hideHeader && (
-          <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
-            <div>
-              <p className="text-red-600 font-semibold text-sm tracking-wider uppercase mb-3">
-                Our Experts
-              </p>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-                Meet Our Doctors
-              </h2>
-            </div>
-            <Link 
-              href="/doctors" 
-              className="inline-flex items-center text-emerald-600 font-medium hover:text-emerald-700 transition"
-            >
-              View All Doctors <ArrowRight className="w-4 h-4 ml-2" />
-            </Link>
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <span className="text-red-600 font-bold text-sm tracking-wider uppercase mb-3 block">
+              Meet Our Doctors
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Experienced Professionals Committed to Your Foot Health
+            </h2>
+            <p className="text-gray-600 text-lg leading-relaxed">
+              Our team combines clinical expertise with a patient-first approach to deliver high-quality foot care and mobility solutions.
+              Whether you need treatment for a painful condition or preventive care for long-term foot health, you're in experienced hands.
+            </p>
           </div>
         )}
 
@@ -72,20 +68,16 @@ export default function Doctors({ hideHeader = false }: { hideHeader?: boolean }
                 <p className="text-red-600 text-sm font-bold mb-1">{doctor.qualifications}</p>
                 <p className="text-gray-500 text-sm mb-6 font-medium">{doctor.role}</p>
                 
-                <div className="mb-8">
-                  <p className="text-gray-900 font-bold text-xs tracking-wider uppercase mb-3">Expertise</p>
-                  <div className="flex flex-wrap gap-2">
-                    {doctor.expertise.map((item, i) => (
-                      <span key={i} className="bg-slate-100 text-gray-600 text-xs font-medium px-3 py-1 rounded-full">
-                        {item}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+                <p className="text-gray-600 text-sm leading-relaxed mb-8 flex-grow">
+                  {doctor.details}
+                </p>
 
-                <button className="w-full mt-auto bg-slate-50 text-gray-900 font-bold py-3.5 rounded-xl hover:bg-slate-100 transition shadow-sm border border-slate-100 flex items-center justify-center gap-2 group-hover:bg-slate-100">
-                  View Profile <ChevronRight className="w-4 h-4" />
-                </button>
+                <Link
+                  href="/book-appointment"
+                  className="w-full mt-auto bg-slate-50 text-gray-900 font-bold py-3.5 rounded-xl hover:bg-slate-100 transition shadow-sm border border-slate-100 flex items-center justify-center gap-2 group-hover:bg-slate-100"
+                >
+                  Book Appointment <ChevronRight className="w-4 h-4" />
+                </Link>
               </div>
             </div>
           ))}

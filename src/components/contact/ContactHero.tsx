@@ -5,8 +5,11 @@ export default function ContactHero() {
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 tracking-tight">
           Contact Us
         </h1>
-        <p className="text-lg md:text-xl text-gray-600 font-medium max-w-2xl mx-auto leading-relaxed">
-          Have a question or need to schedule an appointment? We're here to help you step towards a pain-free life.
+        <h2 className="text-2xl md:text-3xl text-gray-800 font-semibold mb-6">
+          Get in Touch with Our Foot Care Experts
+        </h2>
+        <p className="text-lg md:text-xl text-gray-600 font-medium max-w-3xl mx-auto leading-relaxed">
+          Have questions about our custom insoles, diabetic foot care, or mobility solutions? Reach out to the PodiaXpert team today. We are here to support your journey to pain-free walking.
         </p>
       </div>
     </section>
