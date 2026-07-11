@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import BookingHero from "../../components/book/BookingHero";
-import BookingContent from "../../components/book/BookingContent";
-import ContactMap from "../../components/contact/ContactMap";
+import BookingHero from "@/components/book/BookingHero";
+import BookingContent from "@/components/book/BookingContent";
+import ContactMap from "@/components/contact/ContactMap";
 
 import { client } from '@/sanity/client';
 import { defineQuery, type SanityDocument } from 'next-sanity';

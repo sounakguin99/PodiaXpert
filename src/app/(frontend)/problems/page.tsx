@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import ProblemsHero from '../../components/problems/ProblemsHero';
-import ProblemsGrid from '../../components/problems/ProblemsGrid';
+import ProblemsHero from '@/components/problems/ProblemsHero';
+import ProblemsGrid from '@/components/problems/ProblemsGrid';
 
 import { client } from '@/sanity/client';
 import { defineQuery, type SanityDocument } from 'next-sanity';
