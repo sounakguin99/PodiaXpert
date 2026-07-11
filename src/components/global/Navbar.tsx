@@ -5,13 +5,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Menu, X } from 'lucide-react';
 import { usePathname } from 'next/navigation';
-import { client } from '@/sanity/client';
-import imageUrlBuilder from '@sanity/image-url';
-
-const builder = imageUrlBuilder(client);
-function urlFor(source: any) {
-  return builder.image(source);
-}
 
 export default function Navbar({ data }: { data?: any }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -43,18 +36,14 @@ export default function Navbar({ data }: { data?: any }) {
           {/* Logo */}
           <div className="flex-shrink-0 flex items-center">
             <Link href="/" className="flex items-center gap-2">
-              {data?.logo ? (
-                <Image 
-                  src={urlFor(data.logo).url()} 
-                  alt="PodiaXpert Logo" 
-                  width={120} 
-                  height={40} 
-                  className="object-contain"
-                  priority
-                />
-              ) : (
-                <span className="text-2xl font-bold text-gray-900">PodiaXpert</span>
-              )}
+              <Image 
+                src="/Logo/logoblack.png" 
+                alt="PodiaXpert Logo" 
+                width={120} 
+                height={40} 
+                className="object-contain"
+                priority
+              />
             </Link>
           </div>
 

@@ -95,7 +95,7 @@ export default function Hero({ data }: { data: any }) {
           <div className="lg:col-span-5">
             <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full mx-auto lg:ml-auto border border-gray-100 text-gray-900">
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                Book Your Appointment Today
+                Schedule Your Visit Today
               </h2>
               <p className="text-gray-500 text-sm mb-6">
                 Fill out the form below and we'll get back to you shortly.
