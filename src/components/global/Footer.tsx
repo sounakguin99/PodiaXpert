@@ -3,6 +3,12 @@ import Image from "next/image";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { client } from '@/sanity/client';
 import { defineQuery, type SanityDocument } from 'next-sanity';
+import imageUrlBuilder from '@sanity/image-url';
+
+const builder = imageUrlBuilder(client);
+function urlFor(source: any) {
+  return builder.image(source);
+}
 
 const FOOTER_QUERY = defineQuery(`*[_type == "footer"][0]`);
 
@@ -40,13 +46,17 @@ export default async function Footer() {
           {/* Brand Info */}
           <div>
             <div className="flex items-center gap-2">
-              <Image
-                src="/Logo/logoblack.png"
-                alt="PodiaXpert Logo"
-                width={120}
-                height={40}
-                className="object-contain"
-              />
+              {brandInfo.logo ? (
+                <Image
+                  src={urlFor(brandInfo.logo).url()}
+                  alt="PodiaXpert Logo"
+                  width={120}
+                  height={40}
+                  className="object-contain"
+                />
+              ) : (
+                <span className="text-2xl font-bold text-white">PodiaXpert</span>
+              )}
             </div>
             <p className="text-gray-400 text-sm leading-relaxed mb-6 max-w-xs">
               {brandInfo.description || "Expert foot care in Kolkata. We provide advanced diagnosis and treatments for all types of foot problems, ensuring you get back on your feet quickly and safely."}

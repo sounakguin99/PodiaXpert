@@ -1,8 +1,21 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
-import { servicesData } from "../../data/services";
+import { client } from "@/sanity/client";
+import { defineQuery, type SanityDocument } from "next-sanity";
+import imageUrlBuilder from '@sanity/image-url';
 
-// Map each service slug to its primary card image
+const builder = imageUrlBuilder(client);
+function urlFor(source: any) {
+  return builder.image(source);
+}
+
+const SERVICES_QUERY = defineQuery(
+  `*[_type == "service" && defined(slug.current)] | order(title asc)[0...3]`
+);
+
+const options = { next: { revalidate: 30 } };
+
+// Map each service slug to its primary card image fallback
 const cardImages: Record<string, string> = {
   "custom-footwear": "/Custom Footwear/Custom Footwear.png",
   "custom-insoles": "/Custom Insoles/Custom Insoles 1.png",
@@ -11,21 +24,8 @@ const cardImages: Record<string, string> = {
   "gait-analysis": "/Gait Analysis/Gait Analysis.jpg",
 };
 
-// Expanded descriptions to fill out cards professionally
-const expandedDescriptions: Record<string, string> = {
-  "custom-footwear":
-    "Step into comfort with professionally designed footwear tailored to your unique foot shape. Our custom footwear reduces friction, offers exceptional arch support, and enhances everyday mobility.",
-  "custom-insoles":
-    "Realign your feet and relieve painful pressure points with custom-designed orthotics. Individually crafted after a comprehensive gait assessment, they are perfect for plantar fasciitis, heel pain, and flat feet.",
-  "diabetic-foot-care":
-    "Protect your feet from serious diabetic complications. We offer regular screenings, professional skin/nail assessments, and custom-made offloading insoles to minimize pressure points and ensure long-term foot health.",
-  "foot-assessment":
-    "Uncover the root cause of your foot, ankle, or heel pain. Our comprehensive non-invasive assessment includes a detailed physical examination and computerized gait analysis to recommend the right treatment.",
-  "gait-analysis":
-    "Discover how your body moves. Using state-of-the-art computerised gait analysis and force plate pressure mapping, we analyze weight distribution and identify posture imbalances to correct your walking pattern.",
-};
-
-export default function Services({ data }: { data?: any }) {
+export default async function Services({ data }: { data?: any }) {
+  const services = await client.fetch<SanityDocument[]>(SERVICES_QUERY, {}, options);
   return (
     <section id="services" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -42,14 +42,14 @@ export default function Services({ data }: { data?: any }) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {servicesData.slice(0, 3).map((service) => {
-            const imageUrl =
-              cardImages[service.slug] || "/Foot Assessment/foot scan.jpg";
-            const description =
-              expandedDescriptions[service.slug] || service.description;
+          {services.map((service) => {
+            const imageUrl = service.image
+              ? urlFor(service.image).url()
+              : (cardImages[service.slug.current] || "/Foot Assessment/foot scan.jpg");
+            const description = service.description;
             return (
               <div
-                key={service.slug}
+                key={service.slug.current}
                 className="bg-white rounded-3xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition duration-300 border border-gray-100 flex flex-col h-full group"
               >
                 {/* Card Image */}
@@ -71,7 +71,7 @@ export default function Services({ data }: { data?: any }) {
 
                   <div className="mt-auto">
                     <Link
-                      href={`/services/${service.slug}`}
+                      href={`/services/${service.slug.current}`}
                       className="inline-flex items-center text-red-600 font-bold hover:text-red-700 transition group/link text-left"
                     >
                       <span className="mr-1 leading-snug">Read More</span>

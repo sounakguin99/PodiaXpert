@@ -6,6 +6,12 @@ export const navbar = defineType({
   type: 'document',
   fields: [
     defineField({
+      name: 'logo',
+      title: 'Logo',
+      type: 'image',
+      options: { hotspot: true }
+    }),
+    defineField({
       name: 'links',
       title: 'Navigation Links',
       type: 'array',

@@ -29,14 +29,16 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const pageData = await client.fetch<SanityDocument>(ABOUT_PAGE_QUERY, {}, { next: { revalidate: 30 } });
+
   return (
     <main className="min-h-screen flex flex-col font-sans">
       <div className="flex-grow">
-        <AboutHero />
-        <OurStory />
-        <Expertise />
-        <Doctors />
+        <AboutHero data={pageData?.hero} />
+        <OurStory data={pageData?.ourStory} whyChooseData={pageData?.whyChoose} />
+        <Expertise data={pageData?.expertise} />
+        <Doctors data={pageData?.doctorsSection} />
       </div>
     </main>
   );

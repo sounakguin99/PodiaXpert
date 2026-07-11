@@ -1,11 +1,18 @@
 import type { MetadataRoute } from "next";
-import { servicesData } from "@/data/services";
-import { problemsData } from "@/data/problems";
+import { client } from "@/sanity/client";
+import { defineQuery } from "next-sanity";
 import { blogPosts } from "@/lib/blogData";
 
 const SITE_URL = "https://www.podiaxpert.com";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+const SERVICES_QUERY = defineQuery(`*[_type == "service" && defined(slug.current)]{ "slug": slug.current }`);
+const PROBLEMS_QUERY = defineQuery(`*[_type == "problem" && defined(slug.current)]{ "slug": slug.current }`);
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const [services, problems] = await Promise.all([
+    client.fetch<{slug: string}[]>(SERVICES_QUERY),
+    client.fetch<{slug: string}[]>(PROBLEMS_QUERY)
+  ]);
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [
     {
@@ -71,7 +78,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   // Dynamic service pages
-  const servicePages: MetadataRoute.Sitemap = servicesData.map((service) => ({
+  const servicePages: MetadataRoute.Sitemap = services.map((service) => ({
     url: `${SITE_URL}/services/${service.slug}`,
     lastModified: new Date(),
     changeFrequency: "monthly" as const,
@@ -79,7 +86,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   // Dynamic problem pages
-  const problemPages: MetadataRoute.Sitemap = problemsData.map((problem) => ({
+  const problemPages: MetadataRoute.Sitemap = problems.map((problem) => ({
     url: `${SITE_URL}/problems/${problem.slug}`,
     lastModified: new Date(),
     changeFrequency: "monthly" as const,
