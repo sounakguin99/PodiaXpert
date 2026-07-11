@@ -4,7 +4,10 @@ import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import { useRef, useEffect } from 'react';
 
-const reviews = [
+import { urlFor } from "@/sanity/image";
+
+// Default fallback data
+const defaultReviews = [
   {
     name: "Raja Chatterjee",
     text: "Having Foot pain from last 6 months.. Visited there taken there services and amazingly After uses there Customized Footwear my Pain was Gone within 2 weeks.. without medicine they solve my issues.",
@@ -31,9 +34,10 @@ const reviews = [
   }
 ];
 
-const displayReviews = [...reviews, ...reviews, ...reviews];
-
-export default function Testimonials() {
+export default function Testimonials({ data }: { data?: any }) {
+  const reviews = data?.reviews || defaultReviews;
+  const displayReviews = [...reviews, ...reviews, ...reviews];
+  
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const isPausedRef = useRef(false);
 
@@ -47,7 +51,7 @@ export default function Testimonials() {
         container.scrollLeft = singleSetWidth;
       }, 100);
     }
-  }, []);
+  }, [reviews.length]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -73,7 +77,7 @@ export default function Testimonials() {
     }, 4000); // 4 seconds interval
 
     return () => clearInterval(interval);
-  }, []);
+  }, [reviews.length]);
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current && scrollContainerRef.current.children.length > 0) {
@@ -103,13 +107,13 @@ export default function Testimonials() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16 max-w-3xl mx-auto">
           <span className="text-red-600 font-bold text-sm tracking-wider uppercase mb-3 block">
-            Patient Experiences
+            {data?.tagline || "Patient Experiences"}
           </span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-            What Our Patients Say
+            {data?.heading || "What Our Patients Say"}
           </h2>
           <p className="text-gray-600 text-lg leading-relaxed">
-            Helping people walk comfortably again is what motivates us every day. Our patients trust us for professional care, personalised attention, and practical solutions that make a real difference in their lives.
+            {data?.description || "Helping people walk comfortably again is what motivates us every day. Our patients trust us for professional care, personalised attention, and practical solutions that make a real difference in their lives."}
           </p>
         </div>
 
@@ -148,13 +152,17 @@ export default function Testimonials() {
                   "{review.text}"
                 </p>
                 <div className="flex items-center gap-4 mt-auto">
-                  <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-emerald-100 shadow-sm">
-                    <Image 
-                      src={review.image} 
-                      alt={review.name}
-                      fill
-                      className="object-cover"
-                    />
+                  <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-emerald-100 shadow-sm bg-slate-200 flex items-center justify-center text-slate-500 font-bold">
+                    {review.image ? (
+                      <Image 
+                        src={review.image?.asset ? urlFor(review.image).url() : review.image} 
+                        alt={review.name}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <span>{review.name.charAt(0)}</span>
+                    )}
                   </div>
                   <div>
                     <div className="font-bold text-gray-900 text-sm">

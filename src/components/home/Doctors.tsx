@@ -2,7 +2,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, ChevronRight } from 'lucide-react';
 
-const doctors = [
+import { urlFor } from "@/sanity/image";
+
+// Default fallback data just in case
+const defaultDoctors = [
   {
     name: 'Dr. A. Sharma',
     qualifications: 'DPM, MS (Orthopedics)',
@@ -29,7 +32,9 @@ const doctors = [
   }
 ];
 
-export default function Doctors({ hideHeader = false }: { hideHeader?: boolean }) {
+export default function Doctors({ hideHeader = false, data }: { hideHeader?: boolean, data?: any }) {
+  const doctorsList = data?.doctors || defaultDoctors;
+
   return (
     <section id="doctors" className={`py-20 ${hideHeader ? 'bg-slate-50 pt-8' : 'bg-white'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -37,28 +42,31 @@ export default function Doctors({ hideHeader = false }: { hideHeader?: boolean }
         {!hideHeader && (
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="text-red-600 font-bold text-sm tracking-wider uppercase mb-3 block">
-              Meet Our Doctors
+              {data?.tagline || "Meet Our Doctors"}
             </span>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Experienced Professionals Committed to Your Foot Health
+              {data?.heading || "Experienced Professionals Committed to Your Foot Health"}
             </h2>
             <p className="text-gray-600 text-lg leading-relaxed">
-              Our team combines clinical expertise with a patient-first approach to deliver high-quality foot care and mobility solutions.
-              Whether you need treatment for a painful condition or preventive care for long-term foot health, you're in experienced hands.
+              {data?.description || "Our team combines clinical expertise with a patient-first approach to deliver high-quality foot care and mobility solutions. Whether you need treatment for a painful condition or preventive care for long-term foot health, you're in experienced hands."}
             </p>
           </div>
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {doctors.map((doctor, index) => (
+          {doctorsList.map((doctor: any, index: number) => (
             <div key={index} className="bg-white rounded-2xl overflow-hidden shadow-lg border border-slate-100 group flex flex-col transition-all hover:shadow-xl">
-              <div className="relative h-80 w-full overflow-hidden bg-slate-100">
-                <Image 
-                  src={doctor.image}
-                  alt={doctor.name}
-                  fill
-                  className="object-cover object-top group-hover:scale-105 transition-transform duration-500"
-                />
+              <div className="relative h-80 w-full overflow-hidden bg-slate-100 flex items-center justify-center">
+                {doctor.image ? (
+                  <Image 
+                    src={doctor.image?.asset ? urlFor(doctor.image).url() : doctor.image}
+                    alt={doctor.name || "Doctor"}
+                    fill
+                    className="object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                  />
+                ) : (
+                  <span className="text-gray-400 font-medium">No Image Available</span>
+                )}
                 <div className="absolute top-4 right-4 bg-white text-gray-900 text-xs font-bold px-3 py-1.5 rounded-md shadow-sm">
                   {doctor.experience}
                 </div>

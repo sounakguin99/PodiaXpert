@@ -1,8 +1,38 @@
 import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import { client } from '@/sanity/client';
+import { defineQuery, type SanityDocument } from 'next-sanity';
 
-export default function Footer() {
+const FOOTER_QUERY = defineQuery(`*[_type == "footer"][0]`);
+
+export default async function Footer() {
+  const data = await client.fetch<SanityDocument>(FOOTER_QUERY, {}, { next: { revalidate: 30 } });
+  
+  const brandInfo = data?.brandInfo || {};
+  const quickLinks = data?.quickLinks || [
+    { label: "About Us", url: "/about" },
+    { label: "Our Services", url: "/services" },
+    { label: "Our Doctors", url: "/doctors" },
+    { label: "Problems", url: "/problems" },
+    { label: "Contact Us", url: "/contact-us" }
+  ];
+  const topTreatments = data?.topTreatments || [
+    { label: "Heel Pain", url: "/problems/heel-pain" },
+    { label: "Plantar Fasciitis", url: "/problems/plantar-fasciitis" },
+    { label: "Diabetic Foot", url: "/services/diabetic-foot-care" },
+    { label: "Custom Insoles", url: "/services/custom-insoles" },
+    { label: "Custom Footwear", url: "/services/custom-footwear" }
+  ];
+  const contactInfo = data?.contactInfo || {};
+  const bottomBar = data?.bottomBar || {};
+
+  const location = contactInfo.location || "Block BA47, 1929, Rajdanga Main Road, Sarat Park, Naskarhat, East Kolkata Twp, Kolkata, West Bengal 700107";
+  const phone = contactInfo.phone || "+91 92303 74058";
+  const phoneSubtitle = contactInfo.phoneSubtitle || "Available for emergency calls.";
+  const email = contactInfo.email || "support@podiaxpert.com";
+  const workingHours = contactInfo.workingHours || "Mon - Sat: 11:00 AM - 7:00 PM\nSunday: Closed (by prior appointment)";
+
   return (
     <footer className="bg-[#111827] text-white pt-16 pb-8">
       <div className="w-full mx-auto px-4 sm:px-6 lg:px-12">
@@ -19,51 +49,54 @@ export default function Footer() {
               />
             </div>
             <p className="text-gray-400 text-sm leading-relaxed mb-6 max-w-xs">
-              Expert foot care in Kolkata. We provide advanced diagnosis and
-              treatments for all types of foot problems, ensuring you get back
-              on your feet quickly and safely.
+              {brandInfo.description || "Expert foot care in Kolkata. We provide advanced diagnosis and treatments for all types of foot problems, ensuring you get back on your feet quickly and safely."}
             </p>
             <div className="flex gap-4">
-              <Link
-                href="https://www.facebook.com/podiaxpert"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-emerald-600 transition group"
-              >
-                <svg
-                  className="w-5 h-5 text-emerald-500 group-hover:text-white transition"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+              {brandInfo.facebookUrl && (
+                <Link
+                  href={brandInfo.facebookUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-emerald-600 transition group"
                 >
-                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-                </svg>
-              </Link>
-              <Link
-                href="https://www.instagram.com/podia.xpert/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-emerald-600 transition group"
-              >
-                <svg
-                  className="w-5 h-5 text-emerald-500 group-hover:text-white transition"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+                  <svg
+                    className="w-5 h-5 text-emerald-500 group-hover:text-white transition"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                  </svg>
+                </Link>
+              )}
+              {brandInfo.instagramUrl && (
+                <Link
+                  href={brandInfo.instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-emerald-600 transition group"
                 >
-                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                </svg>
-              </Link>
-              <Link
-                href="https://www.youtube.com/channel/UCRSnVPj7uLjOOXho21w1eJQ"
+                  <svg
+                    className="w-5 h-5 text-emerald-500 group-hover:text-white transition"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                  </svg>
+                </Link>
+              )}
+              {brandInfo.youtubeUrl && (
+                <Link
+                  href={brandInfo.youtubeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-emerald-600 transition group"
@@ -81,6 +114,7 @@ export default function Footer() {
                   <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
                 </svg>
               </Link>
+              )}
             </div>
           </div>
 
@@ -88,46 +122,16 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-6">Quick Links</h3>
             <ul className="space-y-4">
-              <li>
-                <Link
-                  href="/about"
-                  className="text-gray-400 hover:text-white transition text-sm"
-                >
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services"
-                  className="text-gray-400 hover:text-white transition text-sm"
-                >
-                  Our Services
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/doctors"
-                  className="text-gray-400 hover:text-white transition text-sm"
-                >
-                  Our Doctors
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/problems"
-                  className="text-gray-400 hover:text-white transition text-sm"
-                >
-                  Problems
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/contact-us"
-                  className="text-gray-400 hover:text-white transition text-sm"
-                >
-                  Contact Us
-                </Link>
-              </li>
+              {quickLinks.map((link: any, index: number) => (
+                <li key={index}>
+                  <Link
+                    href={link.url}
+                    className="text-gray-400 hover:text-white transition text-sm"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -135,46 +139,16 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-6">Top Treatments</h3>
             <ul className="space-y-4">
-              <li>
-                <Link
-                  href="/problems/heel-pain"
-                  className="text-gray-400 hover:text-white transition text-sm"
-                >
-                  Heel Pain
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/problems/plantar-fasciitis"
-                  className="text-gray-400 hover:text-white transition text-sm"
-                >
-                  Plantar Fasciitis
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services/diabetic-foot-care"
-                  className="text-gray-400 hover:text-white transition text-sm"
-                >
-                  Diabetic Foot
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services/custom-insoles"
-                  className="text-gray-400 hover:text-white transition text-sm"
-                >
-                  Custom Insoles
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services/custom-footwear"
-                  className="text-gray-400 hover:text-white transition text-sm"
-                >
-                  Custom Footwear
-                </Link>
-              </li>
+              {topTreatments.map((link: any, index: number) => (
+                <li key={index}>
+                  <Link
+                    href={link.url}
+                    className="text-gray-400 hover:text-white transition text-sm"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -185,52 +159,49 @@ export default function Footer() {
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-emerald-500 flex-shrink-0" />
                 <span className="text-gray-400 text-sm">
-                  Block BA47, 1929, Rajdanga Main Road, Sarat Park, Naskarhat, East Kolkata Twp, Kolkata, West Bengal 700107
+                  {location}
                 </span>
               </li>
               <li className="flex items-start gap-3">
                 <Phone className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
                 <div>
-                  <span className="text-gray-400 text-sm block">+91 92303 74058</span>
-                  <span className="text-gray-500 text-xs block mt-0.5">Available for emergency calls.</span>
+                  <span className="text-gray-400 text-sm block">{phone}</span>
+                  <span className="text-gray-500 text-xs block mt-0.5">{phoneSubtitle}</span>
                 </div>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-emerald-500 flex-shrink-0" />
                 <span className="text-gray-400 text-sm">
-                  support@podiaxpert.com
+                  {email}
                 </span>
               </li>
               <li className="flex items-start gap-3">
                 <Clock className="w-5 h-5 text-emerald-500 flex-shrink-0" />
-                <span className="text-gray-400 text-sm">
-                  Mon - Sat: 9:00 AM - 8:00 PM
-                  <br />
-                  Sunday: Closed
+                <span className="text-gray-400 text-sm whitespace-pre-line">
+                  {workingHours}
                 </span>
               </li>
             </ul>
           </div>
         </div>
 
-        {/* Bottom Bar */}
         <div className="pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-500 text-sm text-center md:text-left">
-            © {new Date().getFullYear()} PodiaXpert. All rights reserved.
+            © {new Date().getFullYear()} {bottomBar.copyrightText || "PodiaXpert. All rights reserved."}
           </p>
           <div className="flex gap-6">
-            <Link
-              href="/privacy"
-              className="text-gray-500 hover:text-white transition text-sm"
-            >
-              Privacy Policy
-            </Link>
-            <Link
-              href="/terms"
-              className="text-gray-500 hover:text-white transition text-sm"
-            >
-              Terms of Service
-            </Link>
+            {(bottomBar.links || [
+              { label: "Privacy Policy", url: "/privacy" },
+              { label: "Terms of Service", url: "/terms" }
+            ]).map((link: any, index: number) => (
+              <Link
+                key={index}
+                href={link.url}
+                className="text-gray-500 hover:text-white transition text-sm"
+              >
+                {link.label}
+              </Link>
+            ))}
           </div>
         </div>
       </div>

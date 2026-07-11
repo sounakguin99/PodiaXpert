@@ -1,8 +1,50 @@
 "use client";
 
-import { Phone, MessageCircle, MapPin, Clock, Mail } from 'lucide-react';
+import { Phone, MessageCircle, MapPin, Clock, Mail, CheckCircle2 } from 'lucide-react';
+import { useState } from 'react';
 
-export default function ContactFormSection() {
+export default function ContactFormSection({ data }: { data?: any }) {
+  const location = data?.location || "Block BA47, 1929, Rajdanga Main Road, Sarat Park, Naskarhat, East Kolkata Twp, Kolkata, West Bengal 700107";
+  const workingHours = data?.workingHours || "Mon - Sat: 11:00 AM - 7:00 PM \nSunday: Closed (by prior appointment)";
+  const emailAddress = data?.emailAddress || "support@podiaxpert.com";
+  const phone = data?.phone || "+919230374058";
+  const whatsapp = data?.whatsapp || "+919230374058";
+  
+  // Clean phone numbers for tel/wa links
+  const phoneClean = phone.replace(/[^0-9+]/g, '');
+  const whatsappClean = whatsapp.replace(/[^0-9]/g, '');
+
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus("loading");
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (res.ok) {
+        setStatus("success");
+        setFormData({ name: "", phone: "", email: "", subject: "", message: "" });
+      } else {
+        setStatus("error");
+      }
+    } catch (error) {
+      setStatus("error");
+    }
+  };
+
   return (
     <section className="py-20 bg-white relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -20,7 +62,7 @@ export default function ContactFormSection() {
                   <div>
                     <h4 className="font-bold text-gray-900 text-sm">Our Location</h4>
                     <p className="text-gray-600 text-sm leading-relaxed mt-1">
-                      Block BA47, 1929, Rajdanga Main Road, Sarat Park, Naskarhat, East Kolkata Twp, Kolkata, West Bengal 700107
+                      {location}
                     </p>
                   </div>
                 </div>
@@ -29,9 +71,8 @@ export default function ContactFormSection() {
                   <Clock className="w-5 h-5 text-red-600 mt-1 flex-shrink-0" />
                   <div>
                     <h4 className="font-bold text-gray-900 text-sm">Working Hours</h4>
-                    <p className="text-gray-600 text-sm leading-relaxed mt-1">
-                      Mon - Sat: 9:00 AM - 8:00 PM <br />
-                      Sunday: Closed
+                    <p className="text-gray-600 text-sm leading-relaxed mt-1 whitespace-pre-line">
+                      {workingHours}
                     </p>
                   </div>
                 </div>
@@ -41,7 +82,7 @@ export default function ContactFormSection() {
                   <div>
                     <h4 className="font-bold text-gray-900 text-sm">Email Address</h4>
                     <p className="text-gray-600 text-sm leading-relaxed mt-1">
-                      support@podiaxpert.com
+                      {emailAddress}
                     </p>
                   </div>
                 </div>
@@ -55,13 +96,13 @@ export default function ContactFormSection() {
               
               <div className="space-y-4">
                 <a 
-                  href="tel:+919230374058"
+                  href={`tel:${phoneClean}`}
                   className="w-full bg-white text-gray-900 font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 hover:bg-gray-100 transition shadow-sm border border-gray-200"
                 >
                   <Phone className="w-5 h-5" /> Call Now
                 </a>
                 <a 
-                  href="https://wa.me/919230374058"
+                  href={`https://wa.me/${whatsappClean}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full bg-[#25D366] text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 hover:bg-[#20b858] transition shadow-sm"
@@ -83,64 +124,95 @@ export default function ContactFormSection() {
           {/* RIGHT SIDE: Form */}
           <div className="w-full lg:w-[60%] order-1 lg:order-2">
             <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border-t-4 border-t-red-600 overflow-hidden h-full">
-              <div className="p-8 md:p-10">
+              <div className="p-8 md:p-10 h-full">
                 <div className="flex items-center gap-3 mb-8">
                   <Mail className="w-7 h-7 text-red-600" />
                   <h2 className="text-2xl font-bold text-gray-900">Send Us a Message</h2>
                 </div>
                 
-                <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Full Name *</label>
-                      <input 
-                        type="text" 
-                        placeholder="John Doe"
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition bg-slate-50"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Mobile Number *</label>
-                      <input 
-                        type="tel" 
-                        placeholder="+91 92303 74058"
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition bg-slate-50"
-                      />
-                    </div>
+                {status === "success" ? (
+                  <div className="bg-green-50 text-green-800 p-8 rounded-xl border border-green-200 text-center flex flex-col items-center justify-center h-[70%]">
+                    <CheckCircle2 className="w-16 h-16 text-green-500 mb-4" />
+                    <h3 className="text-2xl font-bold mb-3">Message Sent!</h3>
+                    <p className="text-lg">Thank you for reaching out to us. We will get back to you shortly.</p>
+                    <button onClick={() => setStatus("idle")} className="mt-8 text-green-700 font-semibold hover:underline">Send another message</button>
                   </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Email Address (Optional)</label>
-                      <input 
-                        type="email" 
-                        placeholder="john@example.com"
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition bg-slate-50"
-                      />
+                ) : (
+                  <form className="space-y-6" onSubmit={handleSubmit}>
+                    {status === "error" && (
+                      <div className="bg-red-50 text-red-600 p-4 rounded-lg text-sm border border-red-100">
+                        Failed to send message. Please try again later or contact us directly.
+                      </div>
+                    )}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">Full Name *</label>
+                        <input 
+                          type="text"
+                          required
+                          value={formData.name}
+                          onChange={(e) => setFormData({...formData, name: e.target.value})}
+                          placeholder="John Doe"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition bg-slate-50"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">Mobile Number *</label>
+                        <input 
+                          type="tel"
+                          required
+                          value={formData.phone}
+                          onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                          placeholder="+91 92303 74058"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition bg-slate-50"
+                        />
+                      </div>
                     </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Subject *</label>
-                      <input 
-                        type="text" 
-                        placeholder="e.g. Question about Custom Insoles"
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition bg-slate-50"
-                      />
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">Email Address (Optional)</label>
+                        <input 
+                          type="email"
+                          value={formData.email}
+                          onChange={(e) => setFormData({...formData, email: e.target.value})}
+                          placeholder="john@example.com"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition bg-slate-50"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">Subject *</label>
+                        <input 
+                          type="text"
+                          required
+                          value={formData.subject}
+                          onChange={(e) => setFormData({...formData, subject: e.target.value})}
+                          placeholder="e.g. Question about Custom Insoles"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition bg-slate-50"
+                        />
+                      </div>
                     </div>
-                  </div>
 
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Your Message *</label>
-                    <textarea 
-                      rows={6}
-                      placeholder="How can we help you? Write your message here..."
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition bg-slate-50 resize-none"
-                    ></textarea>
-                  </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Your Message *</label>
+                      <textarea 
+                        rows={6}
+                        required
+                        value={formData.message}
+                        onChange={(e) => setFormData({...formData, message: e.target.value})}
+                        placeholder="How can we help you? Write your message here..."
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition bg-slate-50 resize-none"
+                      ></textarea>
+                    </div>
 
-                  <button className="w-full bg-red-600 text-white font-bold text-lg py-4 rounded-xl hover:bg-red-700 transition shadow-md mt-4">
-                    Send Message
-                  </button>
-                </form>
+                    <button 
+                      disabled={status === "loading"}
+                      className="w-full bg-red-600 text-white font-bold text-lg py-4 rounded-xl hover:bg-red-700 transition shadow-md mt-4 disabled:opacity-70"
+                    >
+                      {status === "loading" ? "Sending..." : "Send Message"}
+                    </button>
+                  </form>
+                )}
               </div>
             </div>
           </div>

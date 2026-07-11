@@ -25,19 +25,19 @@ const expandedDescriptions: Record<string, string> = {
     "Discover how your body moves. Using state-of-the-art computerised gait analysis and force plate pressure mapping, we analyze weight distribution and identify posture imbalances to correct your walking pattern.",
 };
 
-export default function Services() {
+export default function Services({ data }: { data?: any }) {
   return (
     <section id="services" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-16">
           <p className="text-red-600 font-bold text-sm tracking-wider uppercase mb-3">
-            Our Services
+            {data?.tagline || "Our Services"}
           </p>
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Comprehensive Foot Care Solutions
+            {data?.heading || "Comprehensive Foot Care Solutions"}
           </h2>
           <p className="text-gray-600 text-lg leading-relaxed">
-            We provide a wide range of specialised services designed to diagnose, treat, and manage your foot and lower limb conditions effectively.
+            {data?.description || "We provide a wide range of specialised services designed to diagnose, treat, and manage your foot and lower limb conditions effectively."}
           </p>
         </div>
 

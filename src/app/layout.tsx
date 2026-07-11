@@ -104,12 +104,18 @@ export const metadata: Metadata = {
 
 import Navbar from "@/components/global/Navbar";
 import Footer from "@/components/global/Footer";
+import { client } from '@/sanity/client';
+import { defineQuery, type SanityDocument } from 'next-sanity';
 
-export default function RootLayout({
+const NAVBAR_QUERY = defineQuery(`*[_type == "navbar"][0]`);
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const navbarData = await client.fetch<SanityDocument>(NAVBAR_QUERY, {}, { next: { revalidate: 30 } });
+
   return (
     <html
       lang="en"
@@ -171,7 +177,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col">
-        <Navbar />
+        <Navbar data={navbarData} />
         {children}
         <Footer />
       </body>

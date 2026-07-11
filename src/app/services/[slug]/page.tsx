@@ -1,8 +1,20 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Stethoscope } from 'lucide-react';
-import { servicesData } from '../../../data/services';
+import { ArrowLeft } from 'lucide-react';
+import { client } from '@/sanity/client';
+import { defineQuery, type SanityDocument } from 'next-sanity';
+import { CustomPortableText } from '@/components/sanity/CustomPortableText';
+
+const SERVICE_QUERY = defineQuery(
+  `*[_type == "service" && slug.current == $slug][0]`
+);
+
+const SERVICES_QUERY = defineQuery(
+  `*[_type == "service" && defined(slug.current)]{ "slug": slug.current }`
+);
+
+const options = { next: { revalidate: 30 } };
 
 interface ServicePageProps {
   params: Promise<{
@@ -12,10 +24,10 @@ interface ServicePageProps {
 
 export async function generateMetadata({ params }: ServicePageProps): Promise<Metadata> {
   const { slug } = await params;
-  const service = servicesData.find((s) => s.slug === slug);
+  const service = await client.fetch<SanityDocument | null>(SERVICE_QUERY, { slug }, options);
   if (!service) return {};
 
-  const description = service.description.length > 160
+  const description = service.description?.length > 160
     ? service.description.substring(0, 157) + "..."
     : service.description;
 
@@ -23,8 +35,8 @@ export async function generateMetadata({ params }: ServicePageProps): Promise<Me
     title: `${service.title} – PodiaXpert Kolkata`,
     description,
     keywords: [
-      service.title.toLowerCase(),
-      `${service.title.toLowerCase()} Kolkata`,
+      service.title?.toLowerCase() || "",
+      `${service.title?.toLowerCase()} Kolkata`,
       "foot clinic Kolkata",
       "podiatrist Kolkata",
       "PodiaXpert",
@@ -41,91 +53,19 @@ export async function generateMetadata({ params }: ServicePageProps): Promise<Me
   };
 }
 
-
-export function generateStaticParams() {
-  return servicesData.map((service) => ({
+export async function generateStaticParams() {
+  const services = await client.fetch<SanityDocument[]>(SERVICES_QUERY, {}, options);
+  return services.map((service) => ({
     slug: service.slug,
   }));
 }
 
-function renderTextWithBold(text: string) {
-  if (!text) return "";
-  const parts = text.split("**");
-  return parts.map((part, index) => {
-    if (index % 2 === 1) {
-      return (
-        <strong key={index} className="font-bold text-gray-900">
-          {part}
-        </strong>
-      );
-    }
-    return part;
-  });
-}
-
-const serviceImages: Record<string, string[]> = {
-  "custom-footwear": [
-    "/Custom Footwear/Custom Footwear 1.png",
-    "/Custom Footwear/Custom Footwear 2.png",
-    "/Custom Footwear/Custom Footwear.png"
-  ],
-  "custom-insoles": [
-    "/Custom Insoles/Custom Insoles 1.png",
-    "/Custom Insoles/Custom Insoles 2.png",
-    "/Custom Insoles/Custom Insoles 3.jpeg"
-  ],
-  "diabetic-foot-care": [
-    "/Diabetic Footcare/Diabetic Foot 2.jpg",
-    "/Diabetic Footcare/Diabetic Foot.jpg"
-  ],
-  "foot-assessment": [
-    "/Foot Assessment/foot scan 2.jpeg",
-    "/Foot Assessment/foot scan 3.jpeg",
-    "/Foot Assessment/foot scan 4.jpeg",
-    "/Foot Assessment/foot scan 5.jpeg",
-    "/Foot Assessment/foot scan.jpg"
-  ],
-  "gait-analysis": [
-    "/Gait Analysis/Gait Analysis.jpg"
-  ]
-};
-
 export default async function ServiceDetail({ params }: ServicePageProps) {
   const { slug } = await params;
-  const service = servicesData.find((s) => s.slug === slug);
+  const service = await client.fetch<SanityDocument | null>(SERVICE_QUERY, { slug }, options);
 
   if (!service) {
     notFound();
-  }
-
-  const images = serviceImages[slug] || [];
-  const contentToRender: string[] = [];
-  const interval = images.length > 0
-    ? Math.max(3, Math.floor(service.content.length / (images.length + 1)))
-    : 0;
-
-  let imageInsertedCount = 0;
-
-  service.content.forEach((paragraph, idx) => {
-    contentToRender.push(paragraph);
-    
-    // Only insert between paragraphs (not at the very end or start), and at intervals
-    if (
-      images.length > 0 &&
-      imageInsertedCount < images.length &&
-      idx > 0 &&
-      idx < service.content.length - 2 &&
-      (idx + 1) % interval === 0
-    ) {
-      contentToRender.push(`[IMAGE]:${images[imageInsertedCount]}`);
-      imageInsertedCount++;
-    }
-  });
-
-  // Append any remaining images at the end just in case
-  while (imageInsertedCount < images.length) {
-    contentToRender.push(`[IMAGE]:${images[imageInsertedCount]}`);
-    imageInsertedCount++;
   }
 
   return (
@@ -142,54 +82,8 @@ export default async function ServiceDetail({ params }: ServicePageProps) {
             {service.title}
           </h1>
           
-          <div className="prose prose-lg prose-blue max-w-none text-gray-600">
-            {contentToRender.map((paragraph, index) => {
-              if (paragraph.startsWith("[IMAGE]:")) {
-                const imagePath = paragraph.replace("[IMAGE]:", "").trim();
-                return (
-                  <div
-                    key={index}
-                    className="my-8 w-full flex justify-center bg-white rounded-2xl overflow-hidden shadow-md border border-gray-100 p-2"
-                  >
-                    <img
-                      src={imagePath}
-                      alt={service.title}
-                      className="w-full h-auto object-cover rounded-xl"
-                    />
-                  </div>
-                );
-              }
-              if (paragraph.startsWith("- ") || paragraph.startsWith("* ")) {
-                const textContent = paragraph.substring(2);
-                return (
-                  <li key={index} className="ml-6 mb-2 list-disc text-gray-700">
-                    {renderTextWithBold(textContent)}
-                  </li>
-                );
-              }
-              if (paragraph.startsWith("✔") || paragraph.startsWith("✓")) {
-                const char = paragraph.startsWith("✔") ? "✔" : "✓";
-                return (
-                  <li key={index} className="ml-4 mb-2 text-gray-700 font-medium list-none flex items-start">
-                    <span className="text-blue-600 mr-2 font-bold">{char}</span>
-                    <span>{renderTextWithBold(paragraph.replace(char, "").trim())}</span>
-                  </li>
-                );
-              }
-              const cleanText = paragraph.replace(/^\*\*(.*)\*\*$/, "$1");
-              if (cleanText.length < 60 && !cleanText.includes(".") && index !== 0) {
-                return (
-                  <h3 key={index} className="text-2xl font-bold text-gray-900 mt-8 mb-4">
-                    {renderTextWithBold(cleanText)}
-                  </h3>
-                );
-              }
-              return (
-                <p key={index} className="mb-6 leading-relaxed">
-                  {renderTextWithBold(paragraph)}
-                </p>
-              );
-            })}
+          <div className="prose prose-lg prose-blue max-w-none">
+            {service.content && <CustomPortableText value={service.content} />}
           </div>
         </div>
         

@@ -6,22 +6,27 @@ import Image from 'next/image';
 import { Menu, X } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
-const navItems = [
-  { name: 'Home', path: '/' },
-  { name: 'About', path: '/about' },
-  { name: 'Services', path: '/services' },
-  { name: 'Doctors', path: '/doctors' },
-  { name: 'Problems', path: '/problems' },
-  { name: 'Blogs', path: '/blogs' },
-  { name: 'Contact', path: '/contact-us' },
-];
-
-export default function Navbar() {
+export default function Navbar({ data }: { data?: any }) {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+  };
+
+  const navItems = data?.links || [
+    { label: 'Home', url: '/' },
+    { label: 'About', url: '/about' },
+    { label: 'Services', url: '/services' },
+    { label: 'Doctors', url: '/doctors' },
+    { label: 'Problems', url: '/problems' },
+    { label: 'Blogs', url: '/blogs' },
+    { label: 'Contact', url: '/contact-us' },
+  ];
+
+  const ctaButton = data?.ctaButton || {
+    label: 'Book Free Consultation',
+    url: '/book-appointment'
   };
 
   return (
@@ -44,13 +49,13 @@ export default function Navbar() {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex space-x-8 items-center">
-            {navItems.map((item) => (
+            {navItems.map((item: any) => (
               <Link 
-                key={item.name}
-                href={item.path} 
-                className={`${pathname === item.path ? 'text-red-600' : 'text-gray-600'} font-medium text-sm hover:text-red-600 transition`}
+                key={item.label}
+                href={item.url} 
+                className={`${pathname === item.url ? 'text-red-600' : 'text-gray-600'} font-medium text-sm hover:text-red-600 transition`}
               >
-                {item.name}
+                {item.label}
               </Link>
             ))}
           </div>
@@ -58,10 +63,10 @@ export default function Navbar() {
           {/* CTA Button (Desktop) */}
           <div className="hidden md:flex items-center">
             <Link 
-              href="/book-appointment" 
+              href={ctaButton.url} 
               className="bg-red-600 text-white px-6 py-2.5 rounded-md font-medium text-sm hover:bg-red-700 transition shadow-sm"
             >
-              Book Free Consultation
+              {ctaButton.label}
             </Link>
           </div>
 
@@ -81,22 +86,22 @@ export default function Navbar() {
       {isOpen && (
         <div className="md:hidden bg-white border-t border-gray-100 shadow-lg absolute w-full left-0">
           <div className="px-4 pt-2 pb-6 space-y-1 flex flex-col">
-            {navItems.map((item) => (
+            {navItems.map((item: any) => (
               <Link 
-                key={item.name}
-                href={item.path} 
+                key={item.label}
+                href={item.url} 
                 onClick={() => setIsOpen(false)}
-                className={`block px-3 py-3 text-base font-medium rounded-md ${pathname === item.path ? 'text-red-600 bg-red-50' : 'text-gray-700 hover:text-red-600 hover:bg-red-50'}`}
+                className={`block px-3 py-3 text-base font-medium rounded-md ${pathname === item.url ? 'text-red-600 bg-red-50' : 'text-gray-700 hover:text-red-600 hover:bg-red-50'}`}
               >
-                {item.name}
+                {item.label}
               </Link>
             ))}
             <Link 
-              href="/book-appointment" 
+              href={ctaButton.url} 
               onClick={() => setIsOpen(false)}
               className="mt-4 block w-full text-center bg-red-600 text-white px-6 py-3 rounded-md font-medium hover:bg-red-700 transition"
             >
-              Book Free Consultation
+              {ctaButton.label}
             </Link>
           </div>
         </div>

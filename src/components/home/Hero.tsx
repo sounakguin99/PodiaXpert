@@ -3,14 +3,46 @@
 import { CheckCircle2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { urlFor } from "@/sanity/image";
+import { useState } from "react";
 
-export default function Hero() {
+export default function Hero({ data }: { data: any }) {
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    service: "",
+    date: "",
+  });
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus("loading");
+
+    try {
+      const res = await fetch("/api/book", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...formData, source: "Hero Section Form" }),
+      });
+
+      if (res.ok) {
+        setStatus("success");
+        setFormData({ name: "", phone: "", service: "", date: "" });
+      } else {
+        setStatus("error");
+      }
+    } catch (error) {
+      setStatus("error");
+    }
+  };
+
   return (
     <section className="relative pt-16 pb-16 overflow-hidden bg-slate-900 text-white min-h-[600px] flex items-center">
       {/* Background Pattern/Image with overlay */}
       <div className="absolute inset-0 z-0 opacity-90">
         <Image
-          src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=2000"
+          src={data?.backgroundImage ? urlFor(data.backgroundImage).url() : "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=2000"}
           alt="Clinic Background"
           fill
           className="object-cover"
@@ -24,34 +56,18 @@ export default function Hero() {
           {/* Left Content (7 Cols) */}
           <div className="lg:col-span-7">
             <span className="inline-block bg-red-600/10 border border-red-500/30 text-red-400 font-semibold tracking-wider text-xs px-3 py-1.5 rounded-full mb-6 uppercase">
-              PodiaXpert – Advanced Foot Clinic, Custom Insoles & Mobility
-              Solutions
+              {data?.tagline}
             </span>
             <h1 className="text-4xl font-bold leading-tight mb-6 text-white">
-              Get Expert Foot Care, Custom Insoles & Mobility Solutions{" "}
-              <span className="text-red-500">in Kolkata</span>
+              {data?.heading?.replace(data?.highlightText, '')}
+              <span className="text-red-500">{data?.highlightText}</span>
             </h1>
-            <div className="text-slate-300 text-lg mb-8 max-w-2xl space-y-4 leading-relaxed">
-              <p>
-                Whether you're dealing with heel pain, plantar fasciitis, flat
-                feet, diabetic foot concerns, ankle pain, or walking discomfort,
-                PodiaXpert is here to help.
-              </p>
-              <p>
-                Our specialists provide comprehensive foot assessments, custom
-                insoles and footwear, and personalised treatment plans to help
-                you move comfortably and confidently again.
-              </p>
+            <div className="text-slate-300 text-lg mb-8 max-w-2xl space-y-4 leading-relaxed whitespace-pre-line">
+              <p>{data?.description}</p>
             </div>
 
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10 text-slate-200">
-              {[
-                "Foot Pain Treatment",
-                "Custom Insoles",
-                "Custom Footwear",
-                "Gait Analysis",
-                "Diabetic Foot Care",
-              ].map((item, idx) => (
+              {(data?.features || []).map((item: string, idx: number) => (
                 <li key={idx} className="flex items-center gap-3">
                   <CheckCircle2 className="w-5 h-5 text-red-500 flex-shrink-0" />
                   <span className="font-semibold text-sm">{item}</span>
@@ -85,59 +101,90 @@ export default function Hero() {
                 Fill out the form below and we'll get back to you shortly.
               </p>
 
-              <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">
-                    Full Name
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="John Doe"
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition bg-slate-50 text-gray-950 placeholder-gray-400"
-                  />
+              {status === "success" ? (
+                <div className="bg-green-50 text-green-800 p-6 rounded-xl border border-green-200 text-center">
+                  <CheckCircle2 className="w-12 h-12 text-green-500 mx-auto mb-3" />
+                  <h3 className="text-lg font-bold mb-2">Request Sent!</h3>
+                  <p className="text-sm">Thank you. We will contact you shortly to confirm your appointment.</p>
+                  <button onClick={() => setStatus("idle")} className="mt-4 text-green-700 font-semibold text-sm hover:underline">Book another</button>
                 </div>
+              ) : (
+                <form className="space-y-5" onSubmit={handleSubmit}>
+                  {status === "error" && (
+                    <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm border border-red-100">
+                      Failed to send request. Please try again or call us.
+                    </div>
+                  )}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">
+                      Full Name *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="John Doe"
+                      value={formData.name}
+                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition bg-slate-50 text-gray-950 placeholder-gray-400"
+                    />
+                  </div>
 
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">
-                    Phone Number
-                  </label>
-                  <input
-                    type="tel"
-                    placeholder="+91 92303 74058"
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition bg-slate-50 text-gray-950 placeholder-gray-400"
-                  />
-                </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">
+                      Phone Number *
+                    </label>
+                    <input
+                      type="tel"
+                      required
+                      placeholder="+91 92303 74058"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition bg-slate-50 text-gray-950 placeholder-gray-400"
+                    />
+                  </div>
 
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">
-                    Select Service
-                  </label>
-                  <select className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition bg-slate-50 text-gray-700">
-                    <option>Choose an option...</option>
-                    <option>Heel Pain Treatment</option>
-                    <option>Plantar Fasciitis</option>
-                    <option>Diabetic Foot Care</option>
-                    <option>Custom Insoles</option>
-                    <option>Custom Footwear</option>
-                    <option>Gait Analysis</option>
-                    <option>Other / General Checkup</option>
-                  </select>
-                </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">
+                      Select Service *
+                    </label>
+                    <select 
+                      required
+                      value={formData.service}
+                      onChange={(e) => setFormData({...formData, service: e.target.value})}
+                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition bg-slate-50 text-gray-700"
+                    >
+                      <option value="">Choose an option...</option>
+                      <option value="Heel Pain Treatment">Heel Pain Treatment</option>
+                      <option value="Plantar Fasciitis">Plantar Fasciitis</option>
+                      <option value="Diabetic Foot Care">Diabetic Foot Care</option>
+                      <option value="Custom Insoles">Custom Insoles</option>
+                      <option value="Custom Footwear">Custom Footwear</option>
+                      <option value="Gait Analysis">Gait Analysis</option>
+                      <option value="Other / General Checkup">Other / General Checkup</option>
+                    </select>
+                  </div>
 
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">
-                    Preferred Date
-                  </label>
-                  <input
-                    type="date"
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition bg-slate-50 text-gray-600"
-                  />
-                </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">
+                      Preferred Date *
+                    </label>
+                    <input
+                      type="date"
+                      required
+                      value={formData.date}
+                      onChange={(e) => setFormData({...formData, date: e.target.value})}
+                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition bg-slate-50 text-gray-600"
+                    />
+                  </div>
 
-                <button className="w-full bg-red-600 text-white font-bold py-3.5 rounded-xl hover:bg-red-700 transition shadow-md mt-2">
-                  Book Appointment
-                </button>
-              </form>
+                  <button 
+                    disabled={status === "loading"}
+                    className="w-full bg-red-600 text-white font-bold py-3.5 rounded-xl hover:bg-red-700 transition shadow-md mt-2 disabled:opacity-70"
+                  >
+                    {status === "loading" ? "Sending..." : "Book Appointment"}
+                  </button>
+                </form>
+              )}
             </div>
           </div>
         </div>

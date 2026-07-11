@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 
-const faqs = [
+const defaultFaqs = [
   {
     question: "Do I need to see a specialist for foot pain?",
     answer: "If foot pain is affecting your daily activities, mobility, or quality of life, it's best to get it assessed by a foot care specialist."
@@ -26,12 +26,14 @@ const faqs = [
   }
 ];
 
-export default function FAQ() {
+export default function FAQ({ data }: { data?: any }) {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
 
   const toggleFAQ = (idx: number) => {
     setOpenIdx(openIdx === idx ? null : idx);
   };
+
+  const faqs = data?.faqs || defaultFaqs;
 
   return (
     <section className="py-20 bg-white border-t border-gray-100">
@@ -39,15 +41,15 @@ export default function FAQ() {
         
         <div className="text-center mb-16">
           <span className="text-red-600 font-bold text-sm tracking-wider uppercase mb-3 block">
-            FAQ
+            {data?.tagline || "FAQ"}
           </span>
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-            Frequently Asked Questions
+            {data?.heading || "Frequently Asked Questions"}
           </h2>
         </div>
 
         <div className="space-y-4">
-          {faqs.map((faq, idx) => {
+          {faqs.map((faq: { question: string, answer: string }, idx: number) => {
             const isOpen = openIdx === idx;
             return (
               <div 

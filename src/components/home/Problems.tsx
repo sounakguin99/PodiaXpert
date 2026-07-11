@@ -43,18 +43,18 @@ const expandedDescriptions: Record<string, string> = {
     "A sharp stabbing pain in your heel, especially during your first steps in the morning, is a classic sign of plantar fasciitis. Learn how it develops and how custom orthotics can relieve strain and pain.",
 };
 
-export default function Problems() {
+export default function Problems({ data }: { data?: any }) {
   return (
     <section className="py-20 bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <span className="text-red-600 font-bold text-sm tracking-wider uppercase mb-3 block">
-          What Are You Suffering From?
+          {data?.tagline || "What Are You Suffering From?"}
         </span>
         <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-          Common Foot Problems We Treat
+          {data?.heading || "Common Foot Problems We Treat"}
         </h2>
         <p className="text-gray-600 text-lg mb-12 max-w-2xl mx-auto">
-          If you're experiencing any of the following issues, our team can help:
+          {data?.description || "If you're experiencing any of the following issues, our team can help:"}
         </p>
 
         {/* 6 Problems Grid */}
