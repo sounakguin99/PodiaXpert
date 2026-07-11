@@ -191,8 +191,8 @@ export default async function Footer() {
           </p>
           <div className="flex gap-6">
             {(bottomBar.links || [
-              { label: "Privacy Policy", url: "/privacy" },
-              { label: "Terms of Service", url: "/terms" }
+              { label: "Privacy Policy", url: "/privacy-policy" },
+              { label: "Terms of Service", url: "/terms-conditions" }
             ]).map((link: any, index: number) => (
               <Link
                 key={index}
